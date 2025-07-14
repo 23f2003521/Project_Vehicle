@@ -4,12 +4,14 @@ from backend.models import User
 from backend.config import LocalDevelopmentConfig 
 
 from backend.security import jwt
+from flask_cors import CORS
 
 app=None
 
 def create_app():
     app=Flask(__name__)
     app.config.from_object(LocalDevelopmentConfig)
+    CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
     db.init_app(app)
     # datastore=SQLAlchemyUserDatastore(db, User, Role)
     jwt.init_app(app)
