@@ -1,18 +1,27 @@
 from flask import Flask
-from backend.database import db
+from backend.database import db,migrate
 from backend.models import User
 from backend.config import LocalDevelopmentConfig 
 
 from backend.security import jwt
 from flask_cors import CORS
 
-app=None
+from backend.celery import celery_init_App
+from celery.schedules import crontab
+from flask_caching import Cache
 
+
+app=None
+cache = Cache()
 def create_app():
     app=Flask(__name__)
     app.config.from_object(LocalDevelopmentConfig)
     CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
+    app.config['CACHE_TYPE'] = 'SimpleCache'  # In-memory
+    app.config['CACHE_DEFAULT_TIMEOUT'] = 300  # default timeout (optional)
     db.init_app(app)
+    migrate.init_app(app, db)
+    cache.init_app(app)
     # datastore=SQLAlchemyUserDatastore(db, User, Role)
     jwt.init_app(app)
     app.app_context().push()
@@ -20,7 +29,39 @@ def create_app():
 
 
 app=create_app()
+celery=celery_init_App(app)
+celery.autodiscover_tasks()
 
+@celery.on_after_finalize.connect
+def setup_periodic_tasks(sender, **kwargs):
+    # Task 1: Monthly report on 2nd of every month at midnight
+    sender.add_periodic_task(
+        crontab(minute='*/2'),
+        # crontab(0, 0, day_of_month='2'),
+        monthly_report.s(),
+        name="Monthly Report"
+    )
+
+    # Task 2: Daily parking reminder at 7:10 PM
+    sender.add_periodic_task(
+        crontab(minute='*/2'),
+        daily_parking_reminder.s(),
+        name='Daily Parking Reminder at 7:10 PM'
+    )
+
+    # Task 3: Every 2 minutes - update booked to occupied
+    sender.add_periodic_task(
+        crontab(minute='*/2'),
+        update_booked_to_occupied.s(),
+        name="Update Booked to Occupied"
+    )
+
+    # Task 4: Every 2 minutes - handle overstays
+    sender.add_periodic_task(
+        crontab(minute='*/2'),
+        handle_overstays.s(),
+        name="Handle Overstays"
+    )
 # #creating default users and serive entries into db.
 # with app.app_context():
 #     db.create_all()

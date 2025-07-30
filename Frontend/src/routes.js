@@ -7,31 +7,48 @@ import Register from './components/Register.vue';
 import Dashboard from './components/Dashboard.vue';
 
 
+import AdminCreateLot from './components/AdminCreateLot.vue';
+import AdminUpdateLot from './components/AdminUpdateLot.vue';
+import AdminDeleteLot from './components/AdminDeleteLot.vue';
+import AdminViewSpots from './components/AdminViewSpots.vue';
+import AdminDeleteSpot from './components/AdminDeleteSpot.vue';
+import AdminUserSearch from './components/AdminUserSearch.vue';
+import AdminLotSearch from './components/AdminLotSearch.vue';
+import AdminSummary from './components/AdminSummary.vue';
+
+
+import UserLotSearch from './components/UserLotSearch.vue';
+import UserBooking from './components/UserBooking.vue';
+import UserUpdateBooking from './components/UserUpdateBooking.vue';
+import UserReleaseBooking from './components/UserReleaseBooking.vue';
+import UserProfile from './components/UserProfile.vue';
+import UserSummary from './components/UserSummary.vue';
+
+
 
 const routes = [
     { path: "/" , component: home},
     {path: "/login",component: Login},
     {path:"/register",component: Register},
     {path:"/dashboard",component: Dashboard},
-//     {path:"/user",components:[
-//         {path: "search", component: UserSearch},
-//         {path: "bookings/:spotid", component: UserBookings},
-//         {path:"update_booking/:spotid",component: UserUpdateBooking},
-//         {path:"cancel_booking/:spotid",component: UserCancelBooking},
-//         {path:"release_booking/:spotid",component: UserReleaseBooking},
-//     ],
-// component: User},
-//    {path: "/admin", components:[
-//     {path:"create_lot", component: AdminCreateLot},
-//     {path:"update_lot/:lotid", component: AdminUpdateLot},
-//     {path:"delete_lot/:lotid", component: AdminDeleteLot},
-//     {path:"view_spot/:spotid", component: AdminViewSpots},
-//     {path:"delete_spot/:spotid", component: AdminDeleteSpot},
-//     {path:"user_search",component: AdminUserSearch},
-//     {path:"lot_search",components: AdminLotSearch}
-//    ]}
-
-
+// USER ROUTES
+    {path: "/user/lot_search", component: UserLotSearch},
+    {path: "/user/booking/:lotid", component: UserBooking},
+    {path:"/user/update_booking/:reservationid",component: UserUpdateBooking},
+    {path:"/user/release_booking/:reservationid",component: UserReleaseBooking},
+    {path: "/user/profile/:userid", component: UserProfile},
+    { path:"/usersummary",component: UserSummary},
+   
+// ADMIN ROUTES
+    { path: '/admin/create_lot', component: AdminCreateLot },
+    { path: '/admin/update_lot/:lotid', component: AdminUpdateLot },
+    { path: '/admin/get_lot/:lotid', component: AdminUpdateLot },
+    { path: '/admin/delete_lot/:lotid', component: AdminDeleteLot },
+    { path: '/admin/view_spot/:spotid', component: AdminViewSpots },
+    { path: '/admin/delete_spot/:spotid', component: AdminDeleteSpot },
+    { path: '/admin/user_search', component: AdminUserSearch },
+    { path: '/admin/lot_search', component: AdminLotSearch },
+    { path:"/adminsummary",component: AdminSummary}
 ]
 
 

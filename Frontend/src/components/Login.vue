@@ -27,9 +27,12 @@ export default {
         return {
             FormData:{
             email: '',
-            password: ''
+            password: '',
+            vehicle_no: '',
+            username:''
         },
         token : "",
+        role:'',
         error:""
     }
           },
@@ -43,16 +46,40 @@ export default {
                 } )
                 response
                 .then(res => {
-                        console.log(res.data)
-                        this.token = res.data.access_token
-                        console.log("Access token:", res.data.access_token)
+                        console.log(res)
+                        this.error=''
                         localStorage.setItem('token', res.data.access_token)
-                        this.$router.push('/dashboard')
+                        localStorage.setItem('role', res.data.role)
+                        console.log(this.role)
+                        this.$router.push('/dashboard').then(() => {
+                        window.location.reload()
+                    })
                         
                     }
                 )
-                .catch(err => err.response.data.message)
-            }
+                .catch(err => {
+                    console.log(err)
+                    this.error=err.response.data.message;
+                })
+            },
+
+            register: function() {
+            const response = axios.post('http://127.0.0.1:5000/api/user_registration', JSON.stringify(this.FormData), {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                }
+            });
+            response
+                .then(res=>{
+                    const container = document.getElementById('container');
+                    container.classList.remove("active");  // shows login
+                    console.log(res)
+                }).catch(err => {
+        console.log(err.response?.data?.message || "Registration failed");
+        this.error = err.response?.data?.message || "Registration failed";
+      });
+}
             
           }
 }
@@ -64,7 +91,7 @@ export default {
 <template>
     <div class="container" id="container">
         <div class="form-container sign-up">
-            <form id="reg" action="/user_registration" method="POST">
+            <form id="reg" @submit.prevent="register">
                 <h1>Create Account</h1>
                 <div class="social-icons">
                     <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
@@ -72,11 +99,10 @@ export default {
                     <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
                     <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
                 </div>
-                <span>or use your email for registeration</span>
-                <input type="text" id="uname" name="uname" placeholder="Name">
-                <input type="email" id="uemail" name="uemail" placeholder="Email">
-                <input type="password" id="pwd" name="pwd" placeholder="Password">
-                <input type="number" id="mn" name="mobile_no" placeholder="Mobile Number">
+                <input type="text" id="uname" v-model="FormData.username" placeholder="Enter your Name">
+                <input type="email" id="uemail" v-model="FormData.email" placeholder="Enter your Email">
+                <input type="password" id="pwd" v-model="FormData.password" placeholder="Enter Password">
+                <input type="v-number" id="v-mn" v-model="FormData.vehicle_no" placeholder="Enter your vehicle-no">
                 <button type="submit">Sign Up</button>
             </form>
         </div>

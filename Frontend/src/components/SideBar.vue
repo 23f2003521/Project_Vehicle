@@ -1,11 +1,29 @@
 
 <script>
 export default {
+   data(){
+    return{
+        role:''
+    }
+
+   },
+
+    mounted(){
+    this.loadrole();
+  },
     methods:{
         logout(){
                 localStorage.clear();
-                this.$router.push('/');
+                this.$router.push('/').then(() => {
+        window.location.reload()
+    })
+            },
+        loadrole: function(){
+            const role = localStorage.getItem('role');
+            if (role) {
+                this.role=role;
             }
+        }
 
     }
   }
@@ -13,47 +31,67 @@ export default {
 
 <template>
   <div class="sidebar">
-    <div class="logo">
+    <div class="logo" v-if="this.role === 'admin'">
         <ul class="menu">
             <li>
-                <a href="http://" class="active">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
+                <RouterLink to="/dashboard"><i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span></RouterLink>
+
+            </li>
+            
+            <li><RouterLink to="/adminsummary"><i class="fas fa-chart-bar"></i>
+                    <span>Statistics</span></RouterLink>
+            
             </li>
             <li>
-                <a href="/profile/{{user_id}}">
-                    <i class="fas fa-user"></i>
-                    <span>Profile</span>
-                </a>
+                <RouterLink to="/user/statistics"><i class="fas fa-question-circle"></i>
+                    <span>FAQ</span></RouterLink>
+            
             </li>
-            <li>
-                <a href="http://">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Statistics</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://">
-                    <i class="fas fa-question-circle"></i>
-                    <span>FAQ</span>
-                </a>
-            </li>
-            <li>
-                <a href="http://">
-                    <i class="fas fa-star"></i>
-                    <span>Testimonials</span>
-                </a>
+            <li><RouterLink to="/user/statistics"><i class="fas fa-star"></i>
+                    <span>testimonials</span></RouterLink>
+            
             </li>
             <li class="logout" @click="logout">
-  <a href="#">
-    <i class="fas fa-sign-out-alt" title="Logout"></i>
-    <span class="logout-text">Logout</span>
-  </a>
-</li>
+                <RouterLink to="#"><i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span></RouterLink>
+            </li>
 
         </ul>
     </div>
+    <!-- User Menu -->
+  <div class="logo" v-else-if="this.role === 'user'">
+    <ul class="menu">
+      <li>
+                <RouterLink to="/dashboard"><i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span></RouterLink>
+
+            </li>
+            
+            <li><RouterLink to="/usersummary"><i class="fas fa-chart-bar"></i>
+                    <span>Statistics</span></RouterLink>
+            
+            </li>
+            <!-- <li><RouterLink to="/user/statistics"><i class="fas fa-star"></i>
+                    <span>testimonials</span></RouterLink>
+            
+            </li> -->
+            <li>
+                <RouterLink to="#"><i class="fas fa-question-circle"></i>
+                    <span>FAQ</span></RouterLink>
+            
+            </li>
+            <li><RouterLink to="#"><i class="fas fa-star"></i>
+                    <span>testimonials</span></RouterLink>
+            
+            </li>
+            <li class="logout" @click="logout">
+                <RouterLink to="#"><i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span></RouterLink>
+            </li>
+    </ul>
+  </div>
+
 </div>
 
 
@@ -90,7 +128,7 @@ export default {
 
 }
 .sidebar:hover{
-    width:240px;
+    width:260px;
     transition: 0.5s;
 }
 .logo{
@@ -152,5 +190,24 @@ export default {
   opacity: 1;
 }
 
+
+
+.menu RouterLink{
+    color: #fff;
+    font-size:14px;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    gap:1.5rem;
+
+}
+
+.menu RouterLink span{
+    overflow: hidden;
+}
+
+.menu RouterLink i {
+    font-size: 1.2rem;
+}
 
 </style>

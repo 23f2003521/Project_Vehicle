@@ -1,7 +1,7 @@
 
 from .database import db
 from datetime import datetime
-
+import pytz
 
 
 
@@ -24,6 +24,7 @@ class ParkingLot(db.Model):
     pin_code=db.Column(db.Integer,nullable=False)
     number_of_spot=db.Column(db.Integer,nullable=False)
     flag_status=db.Column(db.Boolean,nullable=False,default=0)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(pytz.timezone('Asia/Kolkata')))
     spots = db.relationship('ParkingSpot', backref='lot', cascade='all, delete-orphan', lazy=True)
     # services = db.relationship('ServiceRequest', backref='service', lazy=True)
 
@@ -44,7 +45,7 @@ class Reservation(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     spot_id=db.Column(db.Integer, db.ForeignKey('parking_spot.id'), nullable=False)
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    parking_time=db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
+    parking_time=db.Column(db.DateTime,nullable=False,default=lambda: datetime.now(pytz.timezone('Asia/Kolkata')))
     leaving_time=db.Column(db.DateTime,nullable=False)
     parking_cost=db.Column(db.Float,nullable=False)
     reservation_status=db.Column(db.String,default="Booked")  #or released

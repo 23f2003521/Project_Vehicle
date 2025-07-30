@@ -4,10 +4,6 @@
       <i class="fas fa-layer-group fs-4"></i>
       <h5 class="mb-0">SmartPark</h5>
     </div>
-    <div class="user-actions d-flex align-items-center gap-3">
-      <span class="username">Welcome, User</span>
-      <i class="fas fa-user-circle fs-4"></i>
-    </div>
   </header>
 </template>
 
