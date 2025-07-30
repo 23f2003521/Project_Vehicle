@@ -6,3 +6,12 @@ __pycache__/
 instance/
 .vscode/
 .env
+# Ignore node_modules (third-party packages)
+node_modules/
+
+# Ignore environment variables
+.env
+
+# Ignore Windows Zone.Identifier and similar files
+*.Identifier
+*.Zone.Identifier
